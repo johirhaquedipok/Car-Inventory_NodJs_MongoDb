@@ -21,26 +21,27 @@ async function run() {
   try {
     await client.connect();
     const carCollection = client.db("carInventory").collection("cars");
-
-    app.get("/inventoryies", async (req, res) => {
+    // all results
+    app.get("/inventories", async (req, res) => {
       const query = {};
       const cursor = carCollection.find(query);
-      const services = await cursor.toArray();
-      res.send(services);
+      const cars = await cursor.toArray();
+      res.send(cars);
     });
+    // only six results
     app.get("/inventory", async (req, res) => {
       const size = parseInt(req.query.size);
       const query = {};
       const cursor = carCollection.find(query);
-      const services = await cursor.limit(size).toArray();
-      res.send(services);
+      const cars = await cursor.limit(size).toArray();
+      res.send(cars);
     });
-
-    app.get("/service/:id", async (req, res) => {
+    // targeted result
+    app.get("/inventories/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      const service = await carCollection.findOne(query);
-      res.send(service);
+      const car = await carCollection.findOne(query);
+      res.send(car);
     });
 
     // POST
