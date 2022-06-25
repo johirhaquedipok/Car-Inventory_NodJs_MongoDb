@@ -22,10 +22,17 @@ async function run() {
     await client.connect();
     const carCollection = client.db("carInventory").collection("cars");
 
-    app.get("/inventory", async (req, res) => {
+    app.get("/inventoryies", async (req, res) => {
       const query = {};
       const cursor = carCollection.find(query);
       const services = await cursor.toArray();
+      res.send(services);
+    });
+    app.get("/inventory", async (req, res) => {
+      const size = parseInt(req.query.size);
+      const query = {};
+      const cursor = carCollection.find(query);
+      const services = await cursor.limit(size).toArray();
       res.send(services);
     });
 
