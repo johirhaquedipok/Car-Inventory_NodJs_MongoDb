@@ -20,11 +20,11 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
-    const serviceCollection = client.db("carInventory").collection("cars");
+    const carCollection = client.db("carInventory").collection("cars");
 
-    app.get("/service", async (req, res) => {
+    app.get("/inventory", async (req, res) => {
       const query = {};
-      const cursor = serviceCollection.find(query);
+      const cursor = carCollection.find(query);
       const services = await cursor.toArray();
       res.send(services);
     });
@@ -32,14 +32,14 @@ async function run() {
     app.get("/service/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      const service = await serviceCollection.findOne(query);
+      const service = await carCollection.findOne(query);
       res.send(service);
     });
 
     // POST
     app.post("/service", async (req, res) => {
       const newService = req.body;
-      const result = await serviceCollection.insertOne(newService);
+      const result = await carCollection.insertOne(newService);
       res.send(result);
     });
 
@@ -47,7 +47,7 @@ async function run() {
     app.delete("/service/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      const result = await serviceCollection.deleteOne(query);
+      const result = await carCollection.deleteOne(query);
       res.send(result);
     });
   } finally {
