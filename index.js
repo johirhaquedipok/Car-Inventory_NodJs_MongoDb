@@ -21,6 +21,7 @@ async function run() {
   try {
     await client.connect();
     const carCollection = client.db("carInventory").collection("cars");
+    const userCarCollection = client.db("carInventory").collection("userCars");
     // all results
     app.get("/inventories", async (req, res) => {
       const query = {};
@@ -47,7 +48,7 @@ async function run() {
     app.put("/inventories/:id", async (req, res) => {
       const id = req.params.id;
       const update = req.body;
-      console.log(update);
+
       const query = { _id: ObjectId(id) };
       const car = await carCollection.updateOne(
         query,
@@ -58,10 +59,19 @@ async function run() {
     });
 
     // POST
-    app.post("/service", async (req, res) => {
-      const newService = req.body;
-      const result = await carCollection.insertOne(newService);
+    app.post("/userInventory", async (req, res) => {
+      const userNewCar = req.body;
+      const result = await userCarCollection.insertOne(userNewCar);
+      console.log(result);
       res.send(result);
+    });
+    // get
+    app.get("/userInventory", async (req, res) => {
+      const query = {};
+      const cursor = userCarCollection.find(query);
+      const userCars = await cursor.toArray();
+      console.log(userCars);
+      res.send(userCars);
     });
 
     // DELETE
