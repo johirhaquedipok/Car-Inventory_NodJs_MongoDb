@@ -62,22 +62,24 @@ async function run() {
     app.post("/inventories", async (req, res) => {
       const userNewCar = req.body;
       const result = await carCollection.insertOne(userNewCar);
-      console.log(result);
+
       res.send(result);
     });
-    // PUT
+    // PUT Users  Inputed data Id
     app.put("/userInventory", async (req, res) => {
       const email = req.query.email;
       const query = { email: email };
-      const update = req.body;
-      console.log(query);
-      const userNewIds = req.body;
       let result;
       if (query) {
         const cursor = userCarCollection.find(query);
+        const userNewIds = req.body.productId.toString();
         result = await userCarCollection.updateOne(
           query,
-          { $set: update },
+          {
+            $push: {
+              productId: userNewIds,
+            },
+          },
           { upsert: true }
         );
       } else {
