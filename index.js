@@ -46,8 +46,9 @@ async function run() {
      // targeted result
     app.put("/inventories/:id", async (req, res) => {
       const id = req.params.id;
+      const update = req.body;
       const query = { _id: ObjectId(id) };
-      const car = await carCollection.findOne(query);
+      const car = await carCollection.updateOne(query, {$set: update});
       res.send(car);
     });
 
