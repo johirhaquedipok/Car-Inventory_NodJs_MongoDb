@@ -43,6 +43,14 @@ async function run() {
       const car = await carCollection.findOne(query);
       res.send(car);
     });
+     // targeted result
+    app.put("/inventories/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const car = await carCollection.findOne(query);
+      res.send(car);
+    });
+
 
     // POST
     app.post("/service", async (req, res) => {
