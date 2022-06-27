@@ -37,18 +37,17 @@ async function run() {
       const cars = await cursor.limit(size).toArray();
       res.send(cars);
     });
-    // targeted result
+    // get targeted id result
     app.get("/inventories/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const car = await carCollection.findOne(query);
       res.send(car);
     });
-    // targeted result
+    // update  targeted id result
     app.put("/inventories/:id", async (req, res) => {
       const id = req.params.id;
       const update = req.body;
-
       const query = { _id: ObjectId(id) };
       const car = await carCollection.updateOne(
         query,
@@ -62,7 +61,6 @@ async function run() {
     app.post("/inventories", async (req, res) => {
       const userNewCar = req.body;
       const result = await carCollection.insertOne(userNewCar);
-
       res.send(result);
     });
     // PUT Users  Inputed data Id
@@ -89,10 +87,11 @@ async function run() {
     });
     // get
     app.get("/userInventory", async (req, res) => {
-      const query = {};
+      const email = req.query.email;
+      const query = { email: email };
+
       const cursor = userCarCollection.find(query);
       const userCars = await cursor.toArray();
-      console.log(userCars);
       res.send(userCars);
     });
 
