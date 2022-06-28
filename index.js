@@ -77,7 +77,9 @@ async function run() {
     app.put("/userInventory", async (req, res) => {
       const email = req.query.email;
       const query = { email: email };
+      const id = req.body.productId.toString();
       let result;
+
       if (query) {
         const cursor = userCarCollection.find(query);
         const userNewIds = req.body.productId.toString();
@@ -92,6 +94,26 @@ async function run() {
         );
       } else {
         result = await carCollection.insertOne(userNewCar);
+      }
+      res.send(result);
+    });
+    // patch(remove) users existing array id;
+    app.patch("/userInventory", async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      let result;
+      if (query) {
+        const cursor = userCarCollection.find(query);
+        const userNewId = req.body.productId.toString();
+        result = await userCarCollection.updateOne(
+          query,
+          {
+            $pull: {
+              productId: userNewId,
+            },
+          },
+          { upsert: true }
+        );
       }
       res.send(result);
     });
