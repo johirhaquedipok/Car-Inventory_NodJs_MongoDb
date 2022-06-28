@@ -29,6 +29,16 @@ async function run() {
       const cars = await cursor.toArray();
       res.send(cars);
     });
+    // user saved results
+    app.post("/productids", async (req, res) => {
+      const keys = req.body;
+      const ids = keys.map((id) => ObjectId(id));
+      console.log(ids);
+      const query = { _id: { $in: ids } };
+      const cursor = carCollection.find(query);
+      const cars = await cursor.toArray();
+      res.send(cars);
+    });
     // only six results
     app.get("/inventory", async (req, res) => {
       const size = parseInt(req.query.size);
@@ -89,14 +99,13 @@ async function run() {
     app.get("/userInventory", async (req, res) => {
       const email = req.query.email;
       const query = { email: email };
-
       const cursor = userCarCollection.find(query);
       const userCars = await cursor.toArray();
       res.send(userCars);
     });
 
     // DELETE
-    app.delete("/service/:id", async (req, res) => {
+    app.delete("/inventory/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await carCollection.deleteOne(query);
