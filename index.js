@@ -60,7 +60,7 @@ async function run() {
       res.send(cars);
     });
 
-    // user saved results
+    // getttin data that user saved personally
     app.post("/productids", verifyJWT, async (req, res) => {
       const decodeEmail = req.decoded.email;
       const email = req.query.email;
@@ -76,7 +76,8 @@ async function run() {
         res.status(403).send({ message: "Access Forbidden" });
       }
     });
-    // only six results
+
+    // results shows in home page Only 6 results
     app.get("/inventory", async (req, res) => {
       const size = parseInt(req.query.size);
       const query = {};
@@ -84,6 +85,7 @@ async function run() {
       const cars = await cursor.limit(size).toArray();
       res.send(cars);
     });
+
     // get targeted id result
     app.get("/inventories/:id", async (req, res) => {
       const id = req.params.id;
@@ -91,6 +93,7 @@ async function run() {
       const car = await carCollection.findOne(query);
       res.send(car);
     });
+
     // update  targeted id result
     app.put("/inventories/:id", async (req, res) => {
       const id = req.params.id;
@@ -104,12 +107,13 @@ async function run() {
       res.send(car);
     });
 
-    // POST
+    // POST add data to the inventories
     app.post("/inventories", async (req, res) => {
       const userNewCar = req.body;
       const result = await carCollection.insertOne(userNewCar);
       res.send(result);
     });
+
     // PUT Users  Inputed data Id
     app.put("/userInventory", async (req, res) => {
       const email = req.query.email;
@@ -134,6 +138,7 @@ async function run() {
       }
       res.send(result);
     });
+
     // patch(remove) users existing array id;
     app.patch("/userInventory", async (req, res) => {
       const email = req.query.email;
